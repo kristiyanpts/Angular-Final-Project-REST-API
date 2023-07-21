@@ -4,7 +4,7 @@
   "description": "REST-api for back-end of React project",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
+    "start": "DB_URL_CREDENTIALS='mongodb+srv://kristiqn3456:6n4UPrcc6ojkehZ2@lingualearn.lzlunyz.mongodb.net/?retryWrites=true&w=majority' node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
