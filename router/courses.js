@@ -10,6 +10,11 @@ router.post("/", auth(), coursesController.createCourse);
 
 router.put("/:courseId", auth(), coursesController.editCourse);
 router.put("/:courseId/sign-up", auth(), coursesController.courseSignUp);
+router.put(
+  "/:courseId/remove-student",
+  auth(),
+  coursesController.removeStudent
+);
 
 router.delete("/:courseId", auth(), coursesController.deleteCourse);
 

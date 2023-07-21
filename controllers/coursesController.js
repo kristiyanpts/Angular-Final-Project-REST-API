@@ -164,6 +164,20 @@ async function courseSignUp(req, res, next) {
     .catch(next);
 }
 
+function removeStudent(req, res, next) {
+  const { courseId } = req.params;
+  let { userId } = req.body;
+
+  courseModel
+    .updateOne({ _id: courseId }, { $pull: { students: userId } })
+    .then(() =>
+      res
+        .status(200)
+        .json({ message: "User removed from course successfully!" })
+    )
+    .catch(next);
+}
+
 module.exports = {
   getLatestsCourses,
   getCourseById,
@@ -172,4 +186,5 @@ module.exports = {
   editCourse,
   deleteCourse,
   courseSignUp,
+  removeStudent,
 };
