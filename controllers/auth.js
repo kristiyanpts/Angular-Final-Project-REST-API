@@ -115,9 +115,38 @@ function logout(req, res) {
   res.clearCookie(authCookieName).status(204).send({ message: "Logged out!" });
 }
 
+function deleteUser(req, res, next) {
+  const { userId } = req.params;
+
+  userModel
+    .findByIdAndDelete(userId)
+    .then((u) => {
+      res.status(204).send({ message: "User deleted!" });
+    })
+    .catch(next);
+}
+
+function getAllUsers(req, res, next) {
+  userModel
+    .find({})
+    .then((t) => {
+      res.status(200).json(t);
+    })
+    .catch(next);
+}
+
 function getTeachers(req, res, next) {
   userModel
     .find({ role: "teacher" })
+    .then((t) => {
+      res.status(200).json(t);
+    })
+    .catch(next);
+}
+
+function getStudents(req, res, next) {
+  userModel
+    .find({ role: "student" })
     .then((t) => {
       res.status(200).json(t);
     })
@@ -137,12 +166,11 @@ function getProfileInfo(req, res, next) {
 }
 
 function editProfileInfo(req, res, next) {
-  const { _id: userId } = req.user;
   const { email, username, firstName, lastName, image, role } = req.body;
 
   userModel
     .findOneAndUpdate(
-      { _id: userId },
+      { email },
       { email, username, firstName, lastName, image, role },
       { runValidators: true, new: true }
     )
@@ -159,4 +187,7 @@ module.exports = {
   getProfileInfo,
   editProfileInfo,
   getTeachers,
+  getStudents,
+  getAllUsers,
+  deleteUser,
 };

@@ -102,13 +102,10 @@ function editCourse(req, res, next) {
     description,
     schedule,
   } = req.body;
-  const { _id: userId } = req.user;
-
-  console.log(courseId, req.params, userId);
 
   courseModel
     .findOneAndUpdate(
-      { _id: courseId, teacher: userId },
+      { _id: courseId },
       { name, image, level, capacity, date, duration, description, schedule },
       { new: true }
     )
@@ -124,12 +121,11 @@ function editCourse(req, res, next) {
 
 function deleteCourse(req, res, next) {
   const { courseId } = req.params;
-  const { _id: userId } = req.user;
 
   Promise.all([
-    courseModel.findOneAndDelete({ _id: courseId, teacher: userId }),
+    courseModel.findOneAndDelete({ _id: courseId }),
     userModel.findOneAndUpdate(
-      { _id: userId },
+      { courses: courseId },
       { $pull: { courses: courseId } }
     ),
   ])
