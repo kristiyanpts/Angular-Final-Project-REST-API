@@ -1,4 +1,4 @@
-const { userModel } = require("../models");
+const { userModel, courseModel } = require("../models");
 
 const utils = require("../utils");
 const { authCookieName } = require("../app-config");
@@ -118,10 +118,16 @@ function logout(req, res) {
 function deleteUser(req, res, next) {
   const { userId } = req.params;
 
-  userModel
-    .findByIdAndDelete(userId)
-    .then((u) => {
-      res.status(204).send({ message: "User deleted!" });
+  Promise.all([
+    courseModel.deleteMany({ teacher: userId }),
+    userModel.findByIdAndDelete({ _id: userId }),
+  ])
+    .then(([deletedOne, _]) => {
+      if (deletedOne) {
+        res.status(200).json(deletedOne);
+      } else {
+        res.status(401).json({ message: `Not allowed!` });
+      }
     })
     .catch(next);
 }
